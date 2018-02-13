@@ -6,11 +6,14 @@ end
 
 class Hash
 	def safe_invert
-		puts self.each_with_object(Hash.new { |k, v| k[v] =[] }) {|(v,r),k| k[r] << v}
+		each_with_object({}) do |(key, value), out|
+			out[value] ||= []
+			out[value] << key
+		end
 	end
 end
 
 ['orange', 'banana', 'banana', 'banana', 'lemon', 'lemon'].to_histogram
 fruits_country = {'orange' => 'Marocco', 'banana' => 'Ecuador',
 'lemon' => 'Marocco'}
-fruits_country.safe_invert
+puts fruits_country.safe_invert
