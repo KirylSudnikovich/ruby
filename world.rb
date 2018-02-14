@@ -9,11 +9,6 @@ class Country
 		@continent = element.attributes["continent"]
 		@population = element.attributes["population"].to_i
 		@inflation = element.attributes["inflation"].to_i
-
-		if @population > $maxPopulation
-			$maxCountry = @name.to_s
-			$maxPopulation = @population.to_i
-		end
 	end
 end
 
@@ -35,54 +30,27 @@ class World
 			continent = Continent.new(element)
 			@continents.push(continent)
 		}
-
-		puts "Страна с наибольшим населением - #{$maxCountry}. В ней проживает #{$maxPopulation} человек." 
+		$maxCountry = @countries.max_by {|x| x.instance_variable_get :@population}
+		print "Страна с наибольшим населением - ", ($maxCountry.instance_variable_get :@name), ". В ней проживает ", ($maxPopulation = $maxCountry.instance_variable_get :@population), " человек.\n\n"
 	end
 
-	def Show
+	def Show1
 		array = []
 		@continents.each do |continent|
-		continentName = continent.instance_variable_get :@name
-			@countries.each do |country|
-				countryContitent = country.instance_variable_get :@continent
-				if continentName == countryContitent
-					s = country.instance_variable_get :@name
-					array.push(s)
-				end
-			end
+			@countries.each {|country| array.push((country.instance_variable_get :@name)) if (continent.instance_variable_get :@name) == (country.instance_variable_get :@continent)}
 			array.sort
-			puts "\n\nСписок стран в #{continentName} : "
-			array.each do |x|
-				print x,", "
-			end
+			print "\n\nСписок стран в ", (continent.instance_variable_get :@name), " : "
+			array.each {|x| print x, ", "}
 			array.clear
 		end
 	end
 
 	def Inflation
 		puts "\n\n5 стран с наибольшим уровнем инфляции: "
-		array = [["name",0], ["name",0], ["name",0], ["name",0], ["name",0]]
-		@countries.each do |country|
-			mini = 0
-			countryName = country.instance_variable_get :@name
-			inflation = country.instance_variable_get :@inflation
-
-			array.each do |x|
-				if inflation - x[1] > mini
-					mini = inflation - x[1]
-				end
-			end
-
-			array.each do |x|
-				if inflation - x[1] == mini
-					x[0] = countryName
-					x[1] = inflation
-					break
-				end
-			end
-		end
-		array.sort.each do |x|
-			puts x
+		5.times do 
+			country = @countries.max_by {|x| x.instance_variable_get :@inflation}
+			print (country.instance_variable_get :@name), " - ", (inflation = country.instance_variable_get :@inflation) , " %.\n"
+			@countries.delete(country)
 		end
 	end
 end
@@ -90,5 +58,5 @@ end
 doc = Document.new File.new("cia-1996.xml")
 
 world = World.new(doc)
-world.Show
+world.Show1
 world.Inflation
