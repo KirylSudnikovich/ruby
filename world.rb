@@ -15,13 +15,14 @@ end
 class Continent
 	def initialize(element)
 		@name = element.attributes["name"].to_s
-	endе 
+	end
 end
 
 class World
 	def initialize(doc)
 		@countries = []
 		@continents = []
+
 		doc.elements.each("cia/country") { |element| 
 			country = Country.new(element)
 			@countries.push(country)
@@ -30,17 +31,20 @@ class World
 			continent = Continent.new(element)
 			@continents.push(continent)
 		}
-		$maxCountry = @countries.max_by {|x| x.instance_variable_get :@population}
-		print "Страна с наибольшим населением - ", ($maxCountry.instance_variable_get :@name), ". В ней проживает ", ($maxPopulation = $maxCountry.instance_variable_get :@population), " человек.\n\n"
+		$maxCountry = @countries.max_by { |x| x.instance_variable_get :@population }
+		print "Страна с наибольшим населением - ",($maxCountry.instance_variable_get :@name), ". В ней проживает ",
+			($maxPopulation = $maxCountry.instance_variable_get :@population), " человек.\n\n"
 	end
 
 	def Show1
 		array = []
+
 		@continents.each do |continent|
-			@countries.each {|country| array.push((country.instance_variable_get :@name)) if (continent.instance_variable_get :@name) == (country.instance_variable_get :@continent)}
+			@countries.each { |country| array.push((country.instance_variable_get :@name))\
+				if (continent.instance_variable_get :@name) == (country.instance_variable_get :@continent) }
 			array.sort
 			print "\n\nСписок стран в ", (continent.instance_variable_get :@name), " : "
-			array.each {|x| print x, ", "}
+			array.each { |x| print x, ", " }
 			array.clear
 		end
 	end
@@ -49,7 +53,7 @@ class World
 		puts "\n\n5 стран с наибольшим уровнем инфляции: "
 		5.times do 
 			country = @countries.max_by {|x| x.instance_variable_get :@inflation}
-			print (country.instance_variable_get :@name), " - ", (inflation = country.instance_variable_get :@inflation) , " %.\n"
+			print (country.instance_variable_get :@name), " - ",(inflation = country.instance_variable_get :@inflation), " %.\n"
 			@countries.delete(country)
 		end
 	end
