@@ -15,7 +15,7 @@ end
 class Continent
 	def initialize(element)
 		@name = element.attributes["name"].to_s
-	end
+	endе 
 end
 
 class World
